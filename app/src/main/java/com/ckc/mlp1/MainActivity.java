@@ -20,7 +20,9 @@ import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,7 +37,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String[] lables
+        String[] lables = new String[1000];
+        int cnt=0;
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getAssets().open("labels.txt")));
+            String line = bufferedReader.readLine();
+            while (line != null && cnt < 1000) {
+                lables[cnt] = line;
+                cnt++;
+                line = bufferedReader.readLine();
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         imgView = findViewById(R.id.selectedimg);
         select = findViewById(R.id.selectIMFG);
@@ -76,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                     // Releases model resources if no longer used.
                     model.close();
 
-                    tv.setText(getMax(outputFeature0.getFloatArray())+" ");
+                    tv.setText(lables[getMax(outputFeature0.getFloatArray())]+" ");
                 } catch (IOException e) {
                     // TODO Handle the exception
                 }
