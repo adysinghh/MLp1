@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
                 cnt++;
                 line = bufferedReader.readLine();
             }
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
